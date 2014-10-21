@@ -1,20 +1,20 @@
-SWF 是由一个个 tag 组成的<br>
-<br>
-你喜欢 Flash 么？<br>
-你了解 SWF 么？<br>
-当你坚持认为 AS3 是全世界最好的语言时你的底气足么？<br>
-下面带大家了解一下 SWF 的结构。<br>
-<br>
-网上有各种开源的 SWF 编码解码库，比如我写的<a href="https://github.com/zero-swf/src">https://github.com/zero-swf/src</a>（鼓掌）。<br>
-<br>
-研究过的人可能都会有我这种感觉：光有库是不行的，还得自己了解 SWF 结构，才能用的得心应手。<br>
-<br>
-首先把库下载下来，然后用 Flash CS6 新建一个 AS3 的 fla，发布设置里确保勾上“包括 XMP 元数据”：<br>
-<img src="http://bbs.9ria.com/data/attachment/album/201410/21/171309ez9jfpf9o9wne3cd.png"/><br>
-<br>
+<pre>
+SWF 是由一个个 tag 组成的
+
+你喜欢 Flash 么？
+你了解 SWF 么？
+当你坚持认为 AS3 是全世界最好的语言时你的底气足么？
+下面带大家了解一下 SWF 的结构。
+
+网上有各种开源的 SWF 编码解码库，比如我写的<a href="https://github.com/zero-swf/src" target="_blank">https://github.com/zero-swf/src</a>（鼓掌）。
+
+研究过的人可能都会有我这种感觉：光有库是不行的，还得自己了解 SWF 结构，才能用的得心应手。
+
+首先把库下载下来，然后用 Flash CS6 新建一个 AS3 的 fla，发布设置里确保勾上“包括 XMP 元数据”：
+<img src="http://bbs.9ria.com/data/attachment/album/201410/21/171309ez9jfpf9o9wne3cd.png"/>
+
 第一帧写代码：
-<pre><font color="#0000FF">
-import zero.swf.SWF;
+<font color="#0000FF">import zero.swf.SWF;
 import zero.swf.Tag;
 import zero.swf.TagTypes;
 
@@ -24,32 +24,33 @@ swf.initBySWFData(this.loaderInfo.bytes,null);//使用当前影片的数据初�
 
 for each(var tag:Tag in swf.tagV){//遍历 swf 的全部 tag
 	trace(tag.type,TagTypes.typeNameV[tag.type]);//输出每个 tag 的类型
-}
-</font></pre>
-Ctrl+Enter 测试，输出：<br>
-<pre><font color="#0000FF">
-69 FileAttributes
+}</font>
+
+Ctrl+Enter 测试，输出：
+<font color="#0000FF">69 FileAttributes
 77 Metadata
 9 SetBackgroundColor
 86 DefineSceneAndFrameLabelData
 82 DoABC
 76 SymbolClass
 1 ShowFrame
-0 End
-</font></pre>
-SWF 是由一个个 tag 组成的，编译器一般会把图形、声音、代码、设置等编译成对应的 tag。<br>
-比如 XMP 元数据，编译后是一个叫 Metadata 的 tag。<br>
-<br>
+0 End</font>
+
+SWF 是由一个个 tag 组成的，编译器一般会把图形、声音、代码、设置等编译成对应的 tag；
+比如 XMP 元数据，编译后是一个叫 Metadata 的 tag。
+
 如果在发布设置里把“包括 XMP 元数据”前面的勾去掉，再次 Ctrl+Enter 测试，将会输出：
-<pre><font color="#0000FF">
-69 FileAttributes
+<font color="#0000FF">69 FileAttributes
 9 SetBackgroundColor
 86 DefineSceneAndFrameLabelData
 82 DoABC
 76 SymbolClass
 1 ShowFrame
-0 End
-</font></pre>
-和上面的输出比较，会发现少了“77 Metadata”，说明 XMP 元数据对应的 tag 没了。<br>
+0 End</font>
 
-相关文件：<a href="https://github.com/zero-swf/samples/tree/master/20120524">https://github.com/zero-swf/samples/tree/master/20120524</a>。
+和上面的输出比较，会发现少了“77 Metadata”，说明 XMP 元数据对应的 tag 没了。
+
+想深入了解 SWF 结构可以阅读官方文档：<a href="http://www.adobe.com/devnet/swf.html" target="_blank">http://www.adobe.com/devnet/swf.html</a>
+
+相关文件：<a href="https://github.com/zero-swf/samples/tree/master/20120524" target="_blank">https://github.com/zero-swf/samples/tree/master/20120524</a>。
+</pre>
