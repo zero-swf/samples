@@ -1,0 +1,73 @@
+<pre>
+获取和修改 SWF 的背景颜色
+
+准备一个 1.swf，背景色弄成 0x123456：
+
+<img src="http://bbs.9ria.com/data/attachment/album/201410/22/124257u4pyafngcuyyayii.png"/>
+
+小提示，用 WinHex 打开 1.swf 可能可以找到这个颜色值的存放位置：
+
+<img src="http://bbs.9ria.com/data/attachment/album/201410/22/1242588tj208awz3ajrdsp.png"/>
+
+准备一个 2.swf，写代码加载 1.swf 进行操作：
+
+<font color="#0000FF">import zero.swf.SWF;
+import zero.swf.Tag;
+import zero.swf.TagTypes;
+import zero.swf.tagBodys.SetBackgroundColor;
+import flash.net.URLLoader;
+import flash.net.URLLoaderDataFormat;
+import flash.net.URLRequest;
+import flash.events.Event;
+import flash.net.FileReference;
+import flash.utils.ByteArray;
+
+//以 ByteArray 的形式加载 1.swf
+var loader:URLLoader=new URLLoader();
+loader.dataFormat=URLLoaderDataFormat.BINARY;
+loader.addEventListener(Event.COMPLETE,loadComplete);
+loader.load(new URLRequest("1.swf"));
+
+function loadComplete(...args):void{
+	
+	var swf:SWF=new SWF();//构造一个 SWF 的实例 swf
+	
+	swf.initBySWFData(loader.data,null);//使用 1.swf 的数据初始化此 swf
+	
+	for each(var tag:Tag in swf.tagV){//遍历 swf 的全部 tag
+		
+		trace(tag.type,TagTypes.typeNameV[tag.type]);//输出每个 tag 的类型
+		//69 FileAttributes
+		//9 SetBackgroundColor
+		//86 DefineSceneAndFrameLabelData
+		//1 ShowFrame
+		//0 End
+		
+		if(tag.type==TagTypes.SetBackgroundColor){
+			
+			//把 tag 解析为 SetBackgroundColor
+			var setBackgroundColor:SetBackgroundColor=tag.getBody(SetBackgroundColor,null);
+			
+			trace("setBackgroundColor.BackgroundColor=0x"+setBackgroundColor.BackgroundColor.toString(16));
+			//setBackgroundColor.BackgroundColor=0x123456
+			
+			setBackgroundColor.BackgroundColor=0xff0000;//修改背景色为红色
+			
+		}
+		
+	}
+	
+	var swfData:ByteArray=swf.toSWFData(null);//编码为 swf 数据
+	new FileReference().save(swfData,"修改背景色为红色.swf");//另存 swf 数据
+	
+}</font>
+
+Ctrl+Enter 测试 2.swf，如无意外，将弹出文件对话框，另存为“修改背景色为红色.swf”。
+
+打开 修改背景色为红色.swf，见证奇迹的时刻到了：
+
+<img src="http://bbs.9ria.com/data/attachment/album/201410/22/124258qssqcgxih1wiuu85.png"/>
+
+相关文件：<a href="https://github.com/zero-swf/samples/tree/master/20120525" target="_blank">https://github.com/zero-swf/samples/tree/master/20120525</a>。
+
+</pre>
