@@ -1,1 +1,1 @@
-﻿日志地址：http://bbs.9ria.com/blog-192472-14049.html（SWF 是由一个个 tag 组成的）
+﻿日志《SWF 是由一个个 tag 组成的》：http://bbs.9ria.com/blog-192472-14049.html

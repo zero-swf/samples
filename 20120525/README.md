@@ -1,1 +1,1 @@
-﻿日志地址：http://bbs.9ria.com/blog-192472-14054.html（获取和修改 SWF 的背景颜色）
+﻿日志《获取和修改 SWF 的背景颜色》：http://bbs.9ria.com/blog-192472-14054.html
