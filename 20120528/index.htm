@@ -1,0 +1,94 @@
+<pre>
+DefineBitsJPEG2
+
+新建 1.fla，舞台上是一张 JPG 图片：
+
+<img src="http://bbs.9ria.com/data/attachment/album/201410/24/1733004eg45ddtie24d81s.png"/>
+
+确保“使用导入的 JPEG 数据”：
+
+<img src="http://bbs.9ria.com/data/attachment/album/201410/24/173301ijyspbbj1ddhr4yc.png"/>
+
+Ctrl+Enter 导出 1.swf。
+
+如果发布设置的是非压缩影片，你将有幸用 WinHex 目睹原封不动的原 jpg 数据：
+
+<img src="http://bbs.9ria.com/data/attachment/album/201410/24/173301sljrcxrfcr99f9rb.png"/>
+
+Flash 在编译 jpg 图片、mp3 声音等时，有可能是编译为对应的 tag，里头是文件的原数据；
+比如上面的例子，是编译为 DefineBitsJPEG2 tag。
+
+准备一个 2.swf，写代码加载 1.swf 进行操作，尝试把 jpg 数据提取出来：
+<font color="#0000FF">import zero.swf.SWF;
+import zero.swf.Tag;
+import zero.swf.TagTypes;
+import zero.swf.tagBodys.DefineBitsJPEG2;
+import flash.net.URLLoader;
+import flash.net.URLLoaderDataFormat;
+import flash.net.URLRequest;
+import flash.events.Event;
+import flash.net.FileReference;
+import flash.utils.ByteArray;
+
+//以 ByteArray 的形式加载 1.swf
+var loader:URLLoader=new URLLoader();
+loader.dataFormat=URLLoaderDataFormat.BINARY;
+loader.addEventListener(Event.COMPLETE,loadComplete);
+loader.load(new URLRequest("1.swf"));
+
+function loadComplete(...args):void{
+	
+	var swf:SWF=new SWF();//构造一个 SWF 的实例 swf
+	
+	swf.initBySWFData(loader.data,null);//使用 1.swf 的数据初始化此 swf
+	
+	for each(var tag:Tag in swf.tagV){//遍历 swf 的全部 tag
+		
+		trace(tag.type,TagTypes.typeNameV[tag.type]);//输出每个 tag 的类型
+		//69 FileAttributes
+		//9 SetBackgroundColor
+		//86 DefineSceneAndFrameLabelData
+		//21 DefineBitsJPEG2
+		//2 DefineShape
+		//26 PlaceObject2
+		//1 ShowFrame
+		//0 End
+		
+		if(tag.type==TagTypes.DefineBitsJPEG2){
+			
+			//把 tag 解析为 DefineBitsJPEG2
+			var defineBitsJPEG2:DefineBitsJPEG2=tag.getBody(DefineBitsJPEG2,null);
+			
+			var imgData:ByteArray=defineBitsJPEG2.ImageData.toData(null);
+			new FileReference().save(imgData,"提取的图片.jpg");//另存 jpg 数据
+			
+			break;
+			
+		}
+		
+	}
+	
+}</font>
+
+Ctrl+Enter 测试 2.swf，如无意外，将弹出文件对话框，另存为“提取的图片.jpg”。
+
+我和我的小伙伴们都惊呆了：
+
+<img src="http://bbs.9ria.com/data/attachment/album/201410/24/173301qdip335c1tallt1i.png"/>
+
+要替换 1.swf 里的图片为其他内容，也很简单，首先加载要替换为的图片：
+<font color="#0000FF">var imgLoader:URLLoader=new URLLoader();
+imgLoader.dataFormat=URLLoaderDataFormat.BINARY;
+imgLoader.addEventListener(Event.COMPLETE,loadImgComplete);
+imgLoader.load(new URLRequest("暴走漫画 www.iPc.me(35).png"));</font>
+
+找到 DefineBitsJPEG2，替换内容:
+<font color="#0000FF">defineBitsJPEG2.ImageData.initByData(imgLoader.data,0,imgLoader.data.length,null);</font>
+
+编码并另存 SWF 数据：
+<font color="#0000FF">var swfData:ByteArray=swf.toSWFData(null);//编码为 swf 数据
+new FileReference().save(swfData,"替换了图片.swf");//另存 swf 数据</font>
+
+相关文件：<a href="https://github.com/zero-swf/samples/tree/master/20120528" target="_blank">https://github.com/zero-swf/samples/tree/master/20120528</a>。
+
+</pre>

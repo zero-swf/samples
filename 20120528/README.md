@@ -1,0 +1,1 @@
+﻿日志《DefineBitsJPEG2》：http://bbs.9ria.com/blog-192472-14081.html
